@@ -1,5 +1,5 @@
 {
-  "name": "turbo-14.2-daisyui",
+  "name": "turbo-14.2-css",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,8 +14,5 @@
     "react-dom": "^18"
   },
   "devDependencies": {
-    "daisyui": "^4.11.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1"
   }
 }
