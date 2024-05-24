@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# nextjs 14.2 turbo issue
 
-## Getting Started
+This repo reproduces an issue in nextjs 14.2 using the `--turbo` flag.
+CSS rules with `:is()` seem to be discarded. The issue appears to have been
+introduced in `14.2.0-canary-14`. It only appears in developemnt.
 
-First, run the development server:
+This repo has an very simple nextjs site with a single checkbox. It is styled
+(via `src/app/global.css`) to have large margin using:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```css
+.cb:is(input:checked) {
+  margin: 3rem;
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Not Working:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+The `main` (or `not-ok`) branch uses nextjs `14.2.0-canary-14`. In development,
+it generates `.next/static/chunks/src_app_globals_b52d8e.css`:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```css
+/* [project]/src/app/globals.css [app-client] (css) */
+.cbinput:checked {
+  margin: 3rem;
+}
 
-## Learn More
+/*# sourceMappingURL=src_app_globals_b52d8e.css.map*/
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Working:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The `ok` branch is identical to `main` except it uses nextjs
+`14.2.0-canary-13`. In development, it generates
+`.next/static/chunks/src_app_globals_b52d8e.css`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```css
+/* [project]/src/app/globals.css [app-client] (css) */
+.cb:is(input:checked) {
+  margin: 3rem;
+}
+/*# sourceMappingURL=src_app_globals_b52d8e.css.map*/
+```
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with
+[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
